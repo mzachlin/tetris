@@ -6,9 +6,9 @@ Grid::Grid(int width, int height, int block_size) {
   g_block_size = block_size;
 
   //create blank grid
-  for (int i = 0; i < g_x_num; i++) {
+  for (int i = 0; i <= g_y_num; i++) {
     vector<box> row;
-    for (int k = 0; k < g_y_num; k++ ) {
+    for (int k = 0; k <= g_x_num; k++ ) {
       SDL_Rect r1;
       box one_box = {r1, false};
       row.push_back(one_box);
@@ -41,6 +41,9 @@ vector<vector<box> > Grid::GetGridBlocks() {
 bool Grid::isOccupied(int x, int y, int block_size) {
   x = x/block_size;
   y = y/block_size;
+  if (x >= g_x_num || y >= g_y_num ) {
+    cout << "isOccupied: g_x_num: " << g_x_num << " x: " << x << " g_y_num: " << g_y_num << " y: " << y << endl;
+  }
   return grid_blocks[y][x].filled;
 }
 

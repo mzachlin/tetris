@@ -43,6 +43,7 @@ bool Piece::isLocked() {
 }
 
 bool Piece::OutOfBounds(bool checkDown, bool checkLeft, bool checkRight, Grid *grid) {
+  cout << "in out of bounds" << endl;
   for (int i = 0; i < 4; i++) {
     if (checkDown && (blocks[i].y + blocks[i].h > p_win_h || grid->isOccupied(blocks[i].x, blocks[i].y, blocks[i].h))) {
       cout << "occupied; x is " << blocks[i].x << " y is " << blocks[i].y << endl;
@@ -55,15 +56,16 @@ bool Piece::OutOfBounds(bool checkDown, bool checkLeft, bool checkRight, Grid *g
       return true;
     }
   }
+  cout << "done with out of bounds" << endl;
   return false;
 }
 
 void Piece::MoveLoc(int x, int y) {
   //move down, left, right
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 3; i >= 0; i--) {
     blocks[i].x += p_block_size*x;
-      blocks[i].y += p_block_size*y;
+    blocks[i].y += p_block_size*y;
   }
 
 
@@ -88,6 +90,8 @@ void Piece::Move(int x, int y, int r, Grid *grid) {
     locked = true;
   }
   //grid->CheckRows();
-
+  for (int i = 0; i < 4; i++) {
+    cout << "Move: location is (x: " << blocks[i].x << ", y: " << blocks[i].y << ")" << endl;
+  }
 
 }

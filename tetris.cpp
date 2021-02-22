@@ -10,8 +10,6 @@ using namespace std;
 
 /* Functions */
 void drawShape(SDL_Renderer* rend, SDL_Rect rect) {
-    // Clear the screen
-    //SDL_RenderClear(rend);
     // Draw the rectangle
     SDL_SetRenderDrawColor(rend, 33, 163, 125, 170);
     // Draw the outline of the rectangle
@@ -19,8 +17,6 @@ void drawShape(SDL_Renderer* rend, SDL_Rect rect) {
     // Fill the rectangle with a color
     SDL_RenderFillRect(rend, &rect);
     SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
-    //SDL_RenderPresent(rend);
-
 }
 void drawGrid(SDL_Renderer* rend, Grid g) {
   vector<vector<box> > g_boxes = g.GetGridBlocks();
@@ -46,8 +42,8 @@ int main() {
         printf("error initializing SDL: %s\n", SDL_GetError());
     }
     // Create game window
-    int win_w = 900;
-    int win_h = 700;
+    int win_w = 800;  // 500
+    int win_h = 600;  // 700
 
     int block_size = 25;
 
@@ -104,20 +100,22 @@ int main() {
                     switch (event.key.keysym.scancode) {
                         case SDL_SCANCODE_W:
                         case SDL_SCANCODE_UP:
-                            piece1.Move(0, 0, 1, &grid);
-                            break;
+                          piece1.Move(0, 0, 1, &grid);
+                          break;
                         case SDL_SCANCODE_A:
                         case SDL_SCANCODE_LEFT:
-                            piece1.Move(-1, 0, 0, &grid);
-                            break;
+                          piece1.Move(-1, 0, 0, &grid);
+                          break;
                         case SDL_SCANCODE_S:
                         case SDL_SCANCODE_DOWN:
-                            piece1.Move(0, 1, 0, &grid);
-                            break;
+                          piece1.Move(0, 1, 0, &grid);
+                          break;
                         case SDL_SCANCODE_D:
                         case SDL_SCANCODE_RIGHT:
-                            piece1.Move(1, 0, 0, &grid);
-                            break;
+                          piece1.Move(1, 0, 0, &grid);
+                          break;
+                        default:
+                          break;
                     }
             }
         }

@@ -1,5 +1,5 @@
 CC := g++
-CFLAGS := `sdl2-config --libs --cflags` -ggdb3 -O0 -Wall -lSDL2_image -lm
+CFLAGS := `sdl2-config --libs --cflags` -ggdb3 -O0 -Wall -lSDL2_image -lm -std=c++11
 
 # Add source files here
 SRCS := tetris.cpp piece.cpp grid.cpp
