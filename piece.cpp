@@ -1,13 +1,15 @@
 #include "piece.h"
 #include "grid.h"
 
-// Piece constructer
+// Piece constructor
 Piece::Piece(int block_size, int win_w, int win_h) {
   p_block_size = block_size;
   p_win_w = win_w;
   p_win_h = win_h;
   locked = false;
-  //create shape with blocks
+  orientation = 0;
+  rotateWeights = {{2, 1, 0, -1}, {-1, 0, 1, 2}, {-2, -1, 0, 1}, {1, 0, -1, -2}}; 
+  // Create shape with blocks
   for (int i = 0; i < 4; i++) {
     // Create rectangle
     SDL_Rect rect;
@@ -33,7 +35,7 @@ int Piece::GetBlockSize() {
   return p_block_size;
 }
 
-//member functions
+// Member functions
 vector<SDL_Rect> Piece::Get_Blocks() {
   return blocks;
 }
@@ -60,19 +62,33 @@ bool Piece::OutOfBounds(bool checkDown, bool checkLeft, bool checkRight, Grid *g
   return false;
 }
 
-void Piece::MoveLoc(int x, int y) {
-  //move down, left, right
+void Piece::Rotate() {  
+    for (int i = 0; i < 4; i++) {
+      int oldX = blocks[i].x;
+      blocks[i].x = blocks[i].x + rotateWeights[orientation][i]*p_block_size;
+      blocks[i].y = oldX; 
+    }
+    orientation++;
+    if (orientation > 3)
+      orientation = 0;
+}
 
+void Piece::MoveLoc(int x, int y) {
+  // Move down, left, right
   for (int i = 3; i >= 0; i--) {
     blocks[i].x += p_block_size*x;
     blocks[i].y += p_block_size*y;
   }
 
-
 }
 
 void Piece::Move(int x, int y, int r, Grid *grid) {
+
   MoveLoc(x, y);
+
+  if (r) {
+    Rotate();
+  }
 
   //left boundary check
   while (OutOfBounds(false, true, false, grid) && x<0) {
@@ -89,9 +105,12 @@ void Piece::Move(int x, int y, int r, Grid *grid) {
     MoveLoc(0, -1);
     locked = true;
   }
+
   //grid->CheckRows();
   for (int i = 0; i < 4; i++) {
     cout << "Move: location is (x: " << blocks[i].x << ", y: " << blocks[i].y << ")" << endl;
   }
 
 }
+
+
