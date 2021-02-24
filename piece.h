@@ -33,5 +33,6 @@ public: //method declarations
   int GetWinWidth();
   int GetWinHeight();
   int GetBlockSize();
+  int GetPShape();
 };
 #endif

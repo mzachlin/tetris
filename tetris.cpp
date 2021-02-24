@@ -5,11 +5,32 @@
 using namespace std;
 
 /* Functions */
-void drawShape(SDL_Renderer* rend, SDL_Rect rect) {
+void drawShape(SDL_Renderer* rend, SDL_Rect rect, int p_shape) {
     // Fill the rectangle with a color
-    // FIXME: Make color a variable that can be passed in depending on shape?
-    // Maybe make this a function of shape
-    SDL_SetRenderDrawColor(rend, 33, 163, 125, 170);
+    switch (p_shape) {
+      case 0:  // Dark blue right Z
+        SDL_SetRenderDrawColor(rend, 3, 90, 252, 170);
+        break; 
+      case 1:  // Pink left Z
+        SDL_SetRenderDrawColor(rend, 234, 3, 252, 170);
+        break;
+      case 2:  // Red left L
+        SDL_SetRenderDrawColor(rend, 163, 13, 6, 170);
+        break;
+      case 3:  // Green right L
+        SDL_SetRenderDrawColor(rend, 6, 163, 11, 170);
+        break;
+      case 4:  // Purple square
+        SDL_SetRenderDrawColor(rend, 166, 3, 252, 170);
+        break;
+      case 5:  // Golden yellow T
+        SDL_SetRenderDrawColor(rend, 252, 181, 3, 170);
+        break;
+      case 6: // Teal I
+        SDL_SetRenderDrawColor(rend, 33, 163, 125, 170);
+        break;
+    }
+    
     SDL_RenderFillRect(rend, &rect);
     // Draw the outline of the rectangle
     SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
@@ -20,7 +41,7 @@ void drawShape(SDL_Renderer* rend, SDL_Rect rect) {
 void drawPiece(SDL_Renderer* rend, Piece piece) {
   vector<SDL_Rect> blocks = piece.Get_Blocks();
   for (int i = 0; i < 4; i++) {
-    drawShape(rend, blocks[i]);
+    drawShape(rend, blocks[i], piece.GetPShape());
   }
 }
 
@@ -31,8 +52,7 @@ void drawGrid(SDL_Renderer* rend, Grid g) {
     for (int k = 0; k < row.size(); k++) {
       SDL_Rect r1 = row[k].rect;
       if (row[k].filled) {
-        Piece p(0, 0, 0);
-        drawShape(rend, r1);
+        drawShape(rend, r1, row[k].color);
       }
     }
   }

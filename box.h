@@ -4,6 +4,7 @@
 struct box {
   SDL_Rect rect;
   bool filled;
+  int color;
 };
 
 #endif

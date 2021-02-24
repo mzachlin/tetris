@@ -23,7 +23,7 @@ void Grid::UpdateGrid(Piece piece) {
     SDL_Rect rect = blocks[i];
     int x = rect.x/piece.GetBlockSize();
     int y = rect.y/piece.GetBlockSize();
-    box b = {rect, true};
+    box b = {rect, true, piece.GetPShape()};
     if (y >= g_y_num || x >= g_x_num) {
       cout << "wrong! x is " << x << " and y is " << y << endl;
     }
