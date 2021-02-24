@@ -82,12 +82,13 @@ void Piece::MoveLoc(int x, int y) {
 
 }
 
-void Piece::Move(int x, int y, int r, Grid *grid) {
+void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
 
   MoveLoc(x, y);
 
   if (r) {
     Rotate();
+    drawPiece(rend, *this);
   }
 
   //left boundary check
@@ -113,4 +114,22 @@ void Piece::Move(int x, int y, int r, Grid *grid) {
 
 }
 
+void drawShape(SDL_Renderer* rend, SDL_Rect rect) {
+    // Fill the rectangle with a color 
+    // FIXME: Make color a variable that can be passed in depending on shape?
+    // Maybe make this a function of shape
+    SDL_SetRenderDrawColor(rend, 33, 163, 125, 170);
+    SDL_RenderFillRect(rend, &rect);
+    // Draw the outline of the rectangle
+    SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+    SDL_RenderDrawRect(rend, &rect);
+    SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+}
+
+void Piece::drawPiece(SDL_Renderer* rend, Piece piece) {
+  vector<SDL_Rect> blocks = piece.Get_Blocks();
+  for (int i = 0; i < 4; i++) {
+    drawShape(rend, blocks[i]);
+  }
+}
 
