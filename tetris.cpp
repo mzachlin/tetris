@@ -23,7 +23,9 @@ void drawGrid(SDL_Renderer* rend, Grid g) {
     vector<box> row = g_boxes[i];
     for (int k = 0; k < row.size(); k++) {
       SDL_Rect r1 = row[k].rect;
-      drawShape(rend, r1);
+      if (row[k].filled) {
+        drawShape(rend, r1);
+      }
     }
   }
 }
