@@ -6,7 +6,7 @@ using namespace std;
 
 /* Functions */
 void drawShape(SDL_Renderer* rend, SDL_Rect rect) {
-    // Fill the rectangle with a color 
+    // Fill the rectangle with a color
     // FIXME: Make color a variable that can be passed in depending on shape?
     // Maybe make this a function of shape
     SDL_SetRenderDrawColor(rend, 33, 163, 125, 170);
@@ -44,8 +44,8 @@ int main() {
         printf("error initializing SDL: %s\n", SDL_GetError());
     }
     // Create game window
-    int win_w = 500;  
-    int win_h = 700;  
+    int win_w = 500;
+    int win_h = 700;
 
     int block_size = 25;
 
@@ -71,7 +71,7 @@ int main() {
     int close = 0;    // Controls animation loop
 
     // Draw initial shape
-
+    srand(time(NULL)); //seed random number generator
     Piece piece1(block_size, win_w, win_h);
     drawPiece(rend, piece1);
     SDL_RenderPresent(rend);
