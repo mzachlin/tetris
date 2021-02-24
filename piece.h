@@ -18,11 +18,12 @@ private: //internal variable declarations
   int p_block_size;
   int p_win_h;
   int p_win_w;
+  int p_shape;
   bool locked;
-  int orientation;  // This is a number 0-3, with 0 being the starting orientation
-  vector<vector<int>> rotateWeights;  
+  int center_x;
+  int center_y;
   bool OutOfBounds(bool checkDown, bool checkLeft, bool checkRight, Grid *grid);
-  void Rotate();
+  void Rotate(Grid* grid);
   void MoveLoc(int x, int y);
 public: //method declarations
   Piece(int block_size, int win_w, int win_h);

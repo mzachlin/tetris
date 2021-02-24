@@ -79,7 +79,7 @@ int main() {
 
     // Animation loop
     clock_t start = clock();
-    int speed = 100000; //25000;
+    int speed = 30000;
     while (!close) {
         SDL_RenderClear(rend);
         SDL_Event event;
@@ -121,17 +121,16 @@ int main() {
             }
         }
 
+        if (piece1.isLocked()) {
+          grid.UpdateGrid(piece1);
+          piece1 = Piece (block_size, win_w, win_h);
+        }
 
         drawPiece(rend, piece1);
         drawGrid(rend, grid);
         SDL_RenderPresent(rend);
         // Calculate to 60 fps
         SDL_Delay(1000 / 60);    // I'm not sure what the delay is for?
-
-        if (piece1.isLocked()) {
-          grid.UpdateGrid(piece1);
-          piece1 = Piece (block_size, win_w, win_h);
-        }
     }
 
     // Destroy renderer

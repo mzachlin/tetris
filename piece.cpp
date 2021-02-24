@@ -2,25 +2,147 @@
 #include "grid.h"
 
 // Piece constructor
+
 Piece::Piece(int block_size, int win_w, int win_h) {
   p_block_size = block_size;
   p_win_w = win_w;
   p_win_h = win_h;
   locked = false;
-  orientation = 0;
-  rotateWeights = {{2, 1, 0, -1}, {-1, 0, 1, 2}, {-2, -1, 0, 1}, {1, 0, -1, -2}}; 
-  //create shape with blocks
-  for (int i = 0; i < 4; i++) {
-    // Create rectangle
-    SDL_Rect rect;
-    rect.w = p_block_size;
-    rect.h = p_block_size;
-    // Set initial x and y position
-    rect.x = p_win_w/2-p_block_size;
-    rect.y = p_block_size*i;
-    blocks.push_back(rect);
+  SDL_Rect rect;
+  rect.w = p_block_size;
+  rect.h = p_block_size;
+  p_shape = rand()%7;
+  switch(p_shape) {
+    case 0: // right z
+      // Top right
+      rect.x = p_win_w/2-p_block_size;
+      rect.y = p_block_size;
+      blocks.push_back(rect);
+      // Top left
+      rect.x = p_win_w/2-2*p_block_size;
+      rect.y = p_block_size;
+      blocks.push_back(rect);
+      // Bottom right
+      rect.x = p_win_w/2-2*p_block_size;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      // Bottom left
+      rect.x = p_win_w/2-3*p_block_size;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      center_x = blocks[2].x + p_block_size/2;  
+      center_y = blocks[2].y + p_block_size/2; 
+      break;
+    case 1: //left z
+      // Bottom right
+      rect.x = p_win_w/2-p_block_size;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      // Bottom left
+      rect.x = p_win_w/2-2*p_block_size;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      // Top right
+      rect.x = p_win_w/2-2*p_block_size;
+      rect.y = p_block_size;
+      blocks.push_back(rect);
+      // Top left
+      rect.x = p_win_w/2-3*p_block_size;
+      rect.y = p_block_size;
+      blocks.push_back(rect);
+      center_x = blocks[1].x + p_block_size/2;  
+      center_y = blocks[1].y + p_block_size/2; 
+      break;
+    case 2: //left l
+      // Top left
+      rect.x = p_win_w/2-p_block_size;
+      rect.y = p_block_size;
+      blocks.push_back(rect);
+      // Left
+      rect.x = p_win_w/2-p_block_size;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      // Middle
+      rect.x = p_win_w/2;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      // Right
+      rect.x = p_win_w/2+p_block_size;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      center_x = blocks[1].x + p_block_size*1.5;  
+      center_y = blocks[1].y + p_block_size/2; 
+      break;
+    case 3: //right l
+      // Top right
+      rect.x = p_win_w/2+p_block_size;
+      rect.y = p_block_size;
+      blocks.push_back(rect);
+      // Left
+      rect.x = p_win_w/2-p_block_size;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      // Middle
+      rect.x = p_win_w/2;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      // Right
+      rect.x = p_win_w/2+p_block_size;
+      rect.y = 2*p_block_size;
+      blocks.push_back(rect);
+      center_x = blocks[1].x + p_block_size*1.5;  
+      center_y = blocks[1].y + p_block_size/2; 
+      break;
+    case 4: // square
+      // Top left
+      rect.x = p_win_w/2-p_block_size;
+      rect.y = p_block_size;
+      blocks.push_back(rect);
+      // Top right
+      rect.x = p_win_w/2;
+      rect.y = p_block_size;
+      blocks.push_back(rect);
+      // Bottom left 
+      rect.x = p_win_w/2-p_block_size;
+      rect.y = p_block_size*2;
+      blocks.push_back(rect);
+      // Bottom right
+      rect.x = p_win_w/2;
+      rect.y = p_block_size*2;
+      blocks.push_back(rect);
+      center_x = blocks[0].x + p_block_size;  
+      center_y = blocks[0].y + p_block_size; 
+      break;
+    case 5: // t
+      // Stem 
+      rect.x = p_win_w/2-p_block_size;        
+      rect.y = p_block_size;
+      blocks.push_back(rect);
+      // Middle
+      rect.x = p_win_w/2-p_block_size;
+      rect.y = p_block_size*2;
+      blocks.push_back(rect);
+      // Left
+      rect.x = p_win_w/2-2*p_block_size;
+      rect.y = p_block_size*2;
+      blocks.push_back(rect);
+      rect.x = p_win_w/2;
+      rect.y = p_block_size*2;
+      // Right
+      blocks.push_back(rect);
+      center_x = blocks[1].x + p_block_size/2;  
+      center_y = blocks[1].y + p_block_size/2; 
+      break;
+    case 6: // line
+      for (int i = 0; i < 4; i++) {
+        rect.x = p_win_w/2-p_block_size;
+        rect.y = p_block_size*i;
+        blocks.push_back(rect);
+      }
+      center_x = blocks[0].x + p_block_size;  
+      center_y = blocks[1].y + p_block_size; 
+      break;
   }
-
 }
 
 int Piece::GetWinWidth() {
@@ -67,20 +189,21 @@ void Piece::MoveLoc(int x, int y) {
     blocks[i].x += p_block_size*x;
     blocks[i].y += p_block_size*y;
   }
-
+  center_x += p_block_size*x;   // Move center
+  center_y += p_block_size*y;
 
 }
 
-void Piece::Rotate() {  
-    //int offset = blocks[0].y;
-    for (int i = 0; i < 4; i++) {
-      int oldX = blocks[i].x;
-      blocks[i].x = blocks[i].x + rotateWeights[orientation][i]*p_block_size;
-      blocks[i].y = oldX; 
-    }
-    orientation++;
-    if (orientation > 3)
-      orientation = 0;
+void Piece::Rotate(Grid *grid) {  
+  vector<SDL_Rect> oldBlocks = blocks;
+  for (int i = 0; i < 4; i++) {
+    int oldX = blocks[i].x;
+    blocks[i].x = blocks[i].y + center_x - center_y;
+    blocks[i].y = center_x + center_y - oldX - p_block_size;
+  }
+  if (OutOfBounds(true, true, true, grid)) {
+    blocks = oldBlocks;
+  }
 }
 
 void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
@@ -88,7 +211,7 @@ void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
   MoveLoc(x, y);
 
   if (r) {
-    Rotate();
+    Rotate(grid);
   }
 
   //left boundary check
