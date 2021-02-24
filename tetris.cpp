@@ -17,6 +17,13 @@ void drawShape(SDL_Renderer* rend, SDL_Rect rect) {
     SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
 }
 
+void drawPiece(SDL_Renderer* rend, Piece piece) {
+  vector<SDL_Rect> blocks = piece.Get_Blocks();
+  for (int i = 0; i < 4; i++) {
+    drawShape(rend, blocks[i]);
+  }
+}
+
 void drawGrid(SDL_Renderer* rend, Grid g) {
   vector<vector<box>> g_boxes = g.GetGridBlocks();
   for (int i = 0; i < g_boxes.size(); i++) {
@@ -24,16 +31,10 @@ void drawGrid(SDL_Renderer* rend, Grid g) {
     for (int k = 0; k < row.size(); k++) {
       SDL_Rect r1 = row[k].rect;
       if (row[k].filled) {
+        Piece p(0, 0, 0);
         drawShape(rend, r1);
       }
     }
-  }
-}
-
-void drawPiece(SDL_Renderer* rend, Piece piece) {
-  vector<SDL_Rect> blocks = piece.Get_Blocks();
-  for (int i = 0; i < 4; i++) {
-    drawShape(rend, blocks[i]);
   }
 }
 
@@ -100,19 +101,19 @@ int main() {
                     switch (event.key.keysym.scancode) {
                         case SDL_SCANCODE_W:
                         case SDL_SCANCODE_UP:
-                          piece1.Move(0, 0, 1, &grid);
+                          piece1.Move(0, 0, 1, &grid, rend);
                           break;
                         case SDL_SCANCODE_A:
                         case SDL_SCANCODE_LEFT:
-                          piece1.Move(-1, 0, 0, &grid);
+                          piece1.Move(-1, 0, 0, &grid, rend);
                           break;
                         case SDL_SCANCODE_S:
                         case SDL_SCANCODE_DOWN:
-                          piece1.Move(0, 1, 0, &grid);
+                          piece1.Move(0, 1, 0, &grid, rend);
                           break;
                         case SDL_SCANCODE_D:
                         case SDL_SCANCODE_RIGHT:
-                          piece1.Move(1, 0, 0, &grid);
+                          piece1.Move(1, 0, 0, &grid, rend);
                           break;
                         default:
                           break;

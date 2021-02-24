@@ -1,12 +1,14 @@
 #include "piece.h"
 #include "grid.h"
 
-// Piece constructer
+// Piece constructor
 Piece::Piece(int block_size, int win_w, int win_h) {
   p_block_size = block_size;
   p_win_w = win_w;
   p_win_h = win_h;
   locked = false;
+  orientation = 0;
+  rotateWeights = {{2, 1, 0, -1}, {-1, 0, 1, 2}, {-2, -1, 0, 1}, {1, 0, -1, -2}}; 
   //create shape with blocks
   for (int i = 0; i < 4; i++) {
     // Create rectangle
@@ -69,6 +71,17 @@ void Piece::MoveLoc(int x, int y) {
 
 }
 
+void Piece::Rotate() {  
+    //int offset = blocks[0].y;
+    for (int i = 0; i < 4; i++) {
+      int oldX = blocks[i].x;
+      blocks[i].x = blocks[i].x + rotateWeights[orientation][i]*p_block_size;
+      blocks[i].y = oldX; 
+    }
+    orientation++;
+    if (orientation > 3)
+      orientation = 0;
+}
 
 void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
 
@@ -76,7 +89,6 @@ void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
 
   if (r) {
     Rotate();
-    drawPiece(rend, *this);
   }
 
   //left boundary check
@@ -100,25 +112,4 @@ void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
   }*/
 
 }
-
-
-void drawShape(SDL_Renderer* rend, SDL_Rect rect) {
-    // Fill the rectangle with a color 
-    // FIXME: Make color a variable that can be passed in depending on shape?
-    // Maybe make this a function of shape
-    SDL_SetRenderDrawColor(rend, 33, 163, 125, 170);
-    SDL_RenderFillRect(rend, &rect);
-    // Draw the outline of the rectangle
-    SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-    SDL_RenderDrawRect(rend, &rect);
-    SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
-}
-
-void Piece::drawPiece(SDL_Renderer* rend, Piece piece) {
-  vector<SDL_Rect> blocks = piece.Get_Blocks();
-  for (int i = 0; i < 4; i++) {
-    drawShape(rend, blocks[i]);
-  }
-}
-
 

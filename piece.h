@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>          // Graphics libraries
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
+
 using namespace std;
 
 class Grid;
