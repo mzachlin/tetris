@@ -30,8 +30,8 @@ Piece::Piece(int block_size, int win_w, int win_h) {
       rect.x = p_win_w/2-3*p_block_size;
       rect.y = 2*p_block_size;
       blocks.push_back(rect);
-      center_x = blocks[2].x + p_block_size/2;  
-      center_y = blocks[2].y + p_block_size/2; 
+      center_x = blocks[2].x + p_block_size/2;
+      center_y = blocks[2].y + p_block_size/2;
       break;
     case 1: //left z
       // Bottom right
@@ -50,8 +50,8 @@ Piece::Piece(int block_size, int win_w, int win_h) {
       rect.x = p_win_w/2-3*p_block_size;
       rect.y = p_block_size;
       blocks.push_back(rect);
-      center_x = blocks[1].x + p_block_size/2;  
-      center_y = blocks[1].y + p_block_size/2; 
+      center_x = blocks[1].x + p_block_size/2;
+      center_y = blocks[1].y + p_block_size/2;
       break;
     case 2: //left l
       // Top left
@@ -70,8 +70,8 @@ Piece::Piece(int block_size, int win_w, int win_h) {
       rect.x = p_win_w/2+p_block_size;
       rect.y = 2*p_block_size;
       blocks.push_back(rect);
-      center_x = blocks[1].x + p_block_size*1.5;  
-      center_y = blocks[1].y + p_block_size/2; 
+      center_x = blocks[1].x + p_block_size*1.5;
+      center_y = blocks[1].y + p_block_size/2;
       break;
     case 3: //right l
       // Top right
@@ -90,8 +90,8 @@ Piece::Piece(int block_size, int win_w, int win_h) {
       rect.x = p_win_w/2+p_block_size;
       rect.y = 2*p_block_size;
       blocks.push_back(rect);
-      center_x = blocks[1].x + p_block_size*1.5;  
-      center_y = blocks[1].y + p_block_size/2; 
+      center_x = blocks[1].x + p_block_size*1.5;
+      center_y = blocks[1].y + p_block_size/2;
       break;
     case 4: // square
       // Top left
@@ -102,7 +102,7 @@ Piece::Piece(int block_size, int win_w, int win_h) {
       rect.x = p_win_w/2;
       rect.y = p_block_size;
       blocks.push_back(rect);
-      // Bottom left 
+      // Bottom left
       rect.x = p_win_w/2-p_block_size;
       rect.y = p_block_size*2;
       blocks.push_back(rect);
@@ -110,12 +110,12 @@ Piece::Piece(int block_size, int win_w, int win_h) {
       rect.x = p_win_w/2;
       rect.y = p_block_size*2;
       blocks.push_back(rect);
-      center_x = blocks[0].x + p_block_size;  
-      center_y = blocks[0].y + p_block_size; 
+      center_x = blocks[0].x + p_block_size;
+      center_y = blocks[0].y + p_block_size;
       break;
     case 5: // t
-      // Stem 
-      rect.x = p_win_w/2-p_block_size;        
+      // Stem
+      rect.x = p_win_w/2-p_block_size;
       rect.y = p_block_size;
       blocks.push_back(rect);
       // Middle
@@ -130,8 +130,8 @@ Piece::Piece(int block_size, int win_w, int win_h) {
       rect.y = p_block_size*2;
       // Right
       blocks.push_back(rect);
-      center_x = blocks[1].x + p_block_size/2;  
-      center_y = blocks[1].y + p_block_size/2; 
+      center_x = blocks[1].x + p_block_size/2;
+      center_y = blocks[1].y + p_block_size/2;
       break;
     case 6: // line
       for (int i = 0; i < 4; i++) {
@@ -139,8 +139,8 @@ Piece::Piece(int block_size, int win_w, int win_h) {
         rect.y = p_block_size*i;
         blocks.push_back(rect);
       }
-      center_x = blocks[0].x + p_block_size;  
-      center_y = blocks[1].y + p_block_size; 
+      center_x = blocks[0].x + p_block_size;
+      center_y = blocks[1].y + p_block_size;
       break;
   }
 }
@@ -173,13 +173,15 @@ bool Piece::isLocked() {
 bool Piece::OutOfBounds(bool checkDown, bool checkLeft, bool checkRight, Grid *grid) {
   for (int i = 0; i < 4; i++) {
     if (checkDown && (blocks[i].y + blocks[i].h > p_win_h || grid->isOccupied(blocks[i].x, blocks[i].y, blocks[i].h))) {
-      cout << "occupied; x is " << blocks[i].x << " y is " << blocks[i].y << endl;
+      cout << "occupied| oob; x is " << blocks[i].x << " y is " << blocks[i].y << endl;
       return true;
     }
     if (checkLeft && (blocks[i].x < 0 || grid->isOccupied(blocks[i].x, blocks[i].y, blocks[i].h))) {
+      cout << "occupied| oob; x is " << blocks[i].x << " y is " << blocks[i].y << endl;
       return true;
     }
     if (checkRight && (blocks[i].x + blocks[i].w > p_win_w || grid->isOccupied(blocks[i].x, blocks[i].y, blocks[i].h))) {
+      cout << "occupied| oob; x is " << blocks[i].x << " y is " << blocks[i].y << endl;
       return true;
     }
   }
@@ -198,14 +200,21 @@ void Piece::MoveLoc(int x, int y) {
 
 }
 
-void Piece::Rotate(Grid *grid) {  
+void Piece::Rotate(Grid *grid) {
   vector<SDL_Rect> oldBlocks = blocks;
   for (int i = 0; i < 4; i++) {
     int oldX = blocks[i].x;
     blocks[i].x = blocks[i].y + center_x - center_y;
     blocks[i].y = center_x + center_y - oldX - p_block_size;
+    if (blocks[i].x%5) {
+      blocks[i].x++;
+    }
+    if (blocks[i].y%5) {
+      blocks[i].y++;
+    }
   }
   if (OutOfBounds(true, true, true, grid)) {
+    cout << "dude is out of bounds" << endl;
     blocks = oldBlocks;
   }
 }
@@ -239,4 +248,3 @@ void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
   }*/
 
 }
-
