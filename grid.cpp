@@ -27,9 +27,7 @@ void Grid::UpdateGrid(Piece piece) {
     if (y >= g_y_num || x >= g_x_num) {
       cout << "wrong! x is " << x << " and y is " << y << endl;
     }
-    /*else {
-      cout << "rect x is " << rect.x << " and rect y is " << rect.y << endl;
-    }*/
+    
     grid_blocks[y][x] = b;
   }
 }
@@ -41,33 +39,32 @@ vector<vector<box> > Grid::GetGridBlocks() {
 bool Grid::isOccupied(int x, int y, int block_size) {
   x = x/block_size;
   y = y/block_size;
-  if (x >= g_x_num || y >= g_y_num ) {
-    cout << "isOccupied: g_x_num: " << g_x_num << " x: " << x << " g_y_num: " << g_y_num << " y: " << y << endl;
-  }
   return grid_blocks[y][x].filled;
 }
 
 void Grid::CheckRows() {
-  for (auto it = grid_blocks.begin(); it != grid_blocks.end(); ++it){
+  for (int i = 0; i <= g_y_num; i++){
     bool isFull = true;
-    for (int k = 0; k < g_y_num; k++) {
-      if (!(*it)[k].filled) {
-        isFull = false;
-      }
+    for (int k = 0; k < g_x_num; k++) {
+        if (!grid_blocks[i][k].filled) {
+          isFull = false;
+          break;
+        }
+
     }
     if (isFull) {
       //copy down all the rows above; decrement their positions
-      for (auto kt = grid_blocks.end(); kt != grid_blocks.end(); ++kt) {
-        if (kt != grid_blocks.end()) {
-          for (int j = 0; j < g_y_num; j++) {
-            (*kt)[j] = (*kt)[j+1];
-            if ((*kt)[j+1].filled) {
-              (*kt)[j].rect.x -= g_block_size;
+      for (int k = i; k > 0; k--) {
+          for (int j = 0; j < g_x_num; j++) {
+            grid_blocks[k][j] = grid_blocks[k-1][j];
+            if (grid_blocks[k-1][j].filled) {
+              grid_blocks[k][j].rect.y += g_block_size;
             }
           }
-          //TODO:: blank out top row
-
-        }
+      }
+      //blank out top row
+      for (int j = 0; j < g_x_num; j++) {
+        grid_blocks[0][j].filled = false;
       }
     }
   }
