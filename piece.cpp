@@ -204,8 +204,8 @@ void Piece::Rotate(Grid *grid) {
   vector<SDL_Rect> oldBlocks = blocks;
   for (int i = 0; i < 4; i++) {
     int oldX = blocks[i].x;
-    blocks[i].x = blocks[i].y + center_x - center_y;
-    blocks[i].y = center_x + center_y - oldX - p_block_size;
+    blocks[i].x = center_x + center_y - blocks[i].y - p_block_size;
+    blocks[i].y = oldX + center_y - center_x;
     if (blocks[i].x%5) {
       blocks[i].x++;
     }
