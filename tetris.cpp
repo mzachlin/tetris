@@ -1,32 +1,20 @@
-//#include <iostream>
 #include "grid.h"
 #include <cstdio>
 #include <ctime>
 
-/*#include <SDL2/SDL.h>          // Graphics libraries
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_timer.h>*/
 using namespace std;
 
 /* Functions */
 void drawShape(SDL_Renderer* rend, SDL_Rect rect) {
-    // Draw the rectangle
+    // Fill the rectangle with a color 
+    // FIXME: Make color a variable that can be passed in depending on shape?
+    // Maybe make this a function of shape
     SDL_SetRenderDrawColor(rend, 33, 163, 125, 170);
-    // Draw the outline of the rectangle
-    SDL_RenderDrawRect(rend, &rect);
-    // Fill the rectangle with a color
     SDL_RenderFillRect(rend, &rect);
+    // Draw the outline of the rectangle
+    SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+    SDL_RenderDrawRect(rend, &rect);
     SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
-}
-void drawGrid(SDL_Renderer* rend, Grid g) {
-  vector<vector<box> > g_boxes = g.GetGridBlocks();
-  for (int i = 0; i < g_boxes.size(); i++) {
-    vector<box> row = g_boxes[i];
-    for (int k = 0; k < row.size(); k++) {
-      SDL_Rect r1 = row[k].rect;
-      drawShape(rend, r1);
-    }
-  }
 }
 
 void drawPiece(SDL_Renderer* rend, Piece piece) {
@@ -36,14 +24,28 @@ void drawPiece(SDL_Renderer* rend, Piece piece) {
   }
 }
 
+void drawGrid(SDL_Renderer* rend, Grid g) {
+  vector<vector<box>> g_boxes = g.GetGridBlocks();
+  for (int i = 0; i < g_boxes.size(); i++) {
+    vector<box> row = g_boxes[i];
+    for (int k = 0; k < row.size(); k++) {
+      SDL_Rect r1 = row[k].rect;
+      if (row[k].filled) {
+        Piece p(0, 0, 0);
+        drawShape(rend, r1);
+      }
+    }
+  }
+}
+
 /* Main Execution */
 int main() {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         printf("error initializing SDL: %s\n", SDL_GetError());
     }
     // Create game window
-    int win_w = 800;  // 500
-    int win_h = 600;  // 700
+    int win_w = 500;  
+    int win_h = 700;  
 
     int block_size = 25;
 
@@ -89,7 +91,6 @@ int main() {
         // Events mangement
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
-
                 case SDL_QUIT:
                     // Handling of close button
                     close = 1;
@@ -100,19 +101,19 @@ int main() {
                     switch (event.key.keysym.scancode) {
                         case SDL_SCANCODE_W:
                         case SDL_SCANCODE_UP:
-                          piece1.Move(0, 0, 1, &grid);
+                          piece1.Move(0, 0, 1, &grid, rend);
                           break;
                         case SDL_SCANCODE_A:
                         case SDL_SCANCODE_LEFT:
-                          piece1.Move(-1, 0, 0, &grid);
+                          piece1.Move(-1, 0, 0, &grid, rend);
                           break;
                         case SDL_SCANCODE_S:
                         case SDL_SCANCODE_DOWN:
-                          piece1.Move(0, 1, 0, &grid);
+                          piece1.Move(0, 1, 0, &grid, rend);
                           break;
                         case SDL_SCANCODE_D:
                         case SDL_SCANCODE_RIGHT:
-                          piece1.Move(1, 0, 0, &grid);
+                          piece1.Move(1, 0, 0, &grid, rend);
                           break;
                         default:
                           break;

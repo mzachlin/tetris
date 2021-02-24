@@ -1,12 +1,14 @@
 #include "piece.h"
 #include "grid.h"
 
-// Piece constructer
+// Piece constructor
 Piece::Piece(int block_size, int win_w, int win_h) {
   p_block_size = block_size;
   p_win_w = win_w;
   p_win_h = win_h;
   locked = false;
+  orientation = 0;
+  rotateWeights = {{2, 1, 0, -1}, {-1, 0, 1, 2}, {-2, -1, 0, 1}, {1, 0, -1, -2}}; 
   //create shape with blocks
   for (int i = 0; i < 4; i++) {
     // Create rectangle
@@ -43,7 +45,6 @@ bool Piece::isLocked() {
 }
 
 bool Piece::OutOfBounds(bool checkDown, bool checkLeft, bool checkRight, Grid *grid) {
-  cout << "in out of bounds" << endl;
   for (int i = 0; i < 4; i++) {
     if (checkDown && (blocks[i].y + blocks[i].h > p_win_h || grid->isOccupied(blocks[i].x, blocks[i].y, blocks[i].h))) {
       cout << "occupied; x is " << blocks[i].x << " y is " << blocks[i].y << endl;
@@ -56,7 +57,6 @@ bool Piece::OutOfBounds(bool checkDown, bool checkLeft, bool checkRight, Grid *g
       return true;
     }
   }
-  cout << "done with out of bounds" << endl;
   return false;
 }
 
@@ -71,8 +71,25 @@ void Piece::MoveLoc(int x, int y) {
 
 }
 
-void Piece::Move(int x, int y, int r, Grid *grid) {
+void Piece::Rotate() {  
+    //int offset = blocks[0].y;
+    for (int i = 0; i < 4; i++) {
+      int oldX = blocks[i].x;
+      blocks[i].x = blocks[i].x + rotateWeights[orientation][i]*p_block_size;
+      blocks[i].y = oldX; 
+    }
+    orientation++;
+    if (orientation > 3)
+      orientation = 0;
+}
+
+void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
+
   MoveLoc(x, y);
+
+  if (r) {
+    Rotate();
+  }
 
   //left boundary check
   while (OutOfBounds(false, true, false, grid) && x<0) {
@@ -89,9 +106,10 @@ void Piece::Move(int x, int y, int r, Grid *grid) {
     MoveLoc(0, -1);
     locked = true;
   }
-  //grid->CheckRows();
-  for (int i = 0; i < 4; i++) {
+  grid->CheckRows();
+  /*for (int i = 0; i < 4; i++) {
     cout << "Move: location is (x: " << blocks[i].x << ", y: " << blocks[i].y << ")" << endl;
-  }
+  }*/
 
 }
+
