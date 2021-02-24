@@ -157,6 +157,10 @@ int Piece::GetBlockSize() {
   return p_block_size;
 }
 
+int Piece::GetPShape() {
+  return p_shape;
+}
+
 //member functions
 vector<SDL_Rect> Piece::Get_Blocks() {
   return blocks;
