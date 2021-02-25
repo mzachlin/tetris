@@ -382,10 +382,20 @@ int main() {
   // // free surface and texture later?
 
   // Clean up font stuff
-  SDL_DestroyTexture(message);
   SDL_FreeSurface(surf);
+  SDL_FreeSurface(sassSurf0);
+  SDL_FreeSurface(sassSurf1);
+  SDL_FreeSurface(sassSurf2);
+  SDL_FreeSurface(sassSurf3);
   SDL_FreeSurface(logo);
+  SDL_FreeSurface(scene);
+  SDL_DestroyTexture(message);
+  SDL_DestroyTexture(sass0);
+  SDL_DestroyTexture(sass1);
+  SDL_DestroyTexture(sass2);
+  SDL_DestroyTexture(sass3);
   SDL_DestroyTexture(logoTexture);
+  SDL_DestroyTexture(sceneTexture);
   TTF_CloseFont(font);
   TTF_Quit();
 
