@@ -338,13 +338,31 @@ int main() {
       continue;
     }
 
+    
+    SDL_Surface* logo = SDL_LoadBMP("logo3.bmp");
+    SDL_Texture* logoTexture = SDL_CreateTextureFromSurface(rend, logo);
+    SDL_Rect logoRect;
+    logoRect.x = 500;
+    logoRect.y = 75;
+    logoRect.w = 200;
+    logoRect.h = 100;
+    SDL_RenderCopy(rend, logoTexture, NULL, &logoRect);
     // display score
     SDL_Color white = {255, 255, 255};
     char str1[256] = "Score: ";
-    drawMessage(str1, grid.getScore(), 525, 100, 100, 75, rend, font, white);
+    drawMessage(str1, grid.getScore(), 525, 200, 100, 75, rend, font, white);
     // display level
     char str2[256] = "Level: ";
-    drawMessage(str2, grid.getLevel(), 525, 170, 100, 75, rend,font, white);
+    drawMessage(str2, grid.getLevel(), 525, 270, 100, 75, rend,font, white);
+
+    SDL_Surface* scene = SDL_LoadBMP("petersburg.bmp");
+    SDL_Texture* sceneTexture = SDL_CreateTextureFromSurface(rend, scene);
+    SDL_Rect sceneRect;
+    sceneRect.x = 500;
+    sceneRect.y = 400;
+    sceneRect.w = 200;
+    sceneRect.h = 200;
+    SDL_RenderCopy(rend, sceneTexture, NULL, &sceneRect);
 
 
     drawGrid(rend, grid);
