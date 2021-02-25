@@ -1,8 +1,8 @@
 CC := g++
-CFLAGS := `sdl2-config --libs --cflags` -ggdb3 -O0 -Wall -lSDL2_image -lm -std=c++11
+CFLAGS := `sdl2-config --libs --cflags` -ggdb3 -O0 -Wall -lSDL2_image -lSDL2_ttf -lm -std=c++11
 
 # Add source files here
-SRCS := tetris.cpp piece.cpp grid.cpp
+SRCS := grid.cpp tetris.cpp piece.cpp 
 
 # Generate names of object files
 OBJS := $(SRCS:.cpp=.o)

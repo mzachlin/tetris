@@ -1,6 +1,7 @@
 #include "piece.h"
 #include "grid.h"
 
+
 // Piece constructor
 
 Piece::Piece(int block_size, int win_w, int win_h) {
@@ -219,7 +220,7 @@ void Piece::Rotate(Grid *grid) {
   }
 }
 
-void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
+bool Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
 
   MoveLoc(x, y);
 
@@ -241,10 +242,17 @@ void Piece::Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend) {
   while (OutOfBounds(true, false, false, grid) && y) {
     MoveLoc(0, -1);
     locked = true;
+
+    for (int i = 0; i < 4; i++) {
+      if (this->blocks[i].y < 50) {
+        cout << "########## YOUR TIME IS UP" << endl;
+        return true;
+      }
+    }
+   
   }
   grid->CheckRows();
-  /*for (int i = 0; i < 4; i++) {
-    cout << "Move: location is (x: " << blocks[i].x << ", y: " << blocks[i].y << ")" << endl;
-  }*/
+
+  return false;
 
 }

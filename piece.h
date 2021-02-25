@@ -28,7 +28,7 @@ private: //internal variable declarations
 public: //method declarations
   Piece(int block_size, int win_w, int win_h);
   vector<SDL_Rect> Get_Blocks();
-  void Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend=NULL);
+  bool Move(int x, int y, int r, Grid *grid, SDL_Renderer* rend=NULL);
   bool isLocked();
   int GetWinWidth();
   int GetWinHeight();

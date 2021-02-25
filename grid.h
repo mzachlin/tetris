@@ -6,6 +6,8 @@
 #include <SDL2/SDL.h>          // Graphics libraries
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
+#include <SDL_ttf.h>
+
 #include "box.h"
 #include "piece.h"
 
@@ -19,6 +21,9 @@ private: //internal variable declarations
   int g_x_num;
   int g_y_num;
   int g_block_size;
+  int g_level;
+  int g_num_lines_cleared;
+  int g_score;
   vector<vector<box> > grid_blocks;
 
 public: //method declarations
@@ -27,5 +32,6 @@ public: //method declarations
   vector<vector<box> > GetGridBlocks();
   bool isOccupied(int x, int y, int block_size);
   void CheckRows();
+  int getLevel();
 };
 #endif

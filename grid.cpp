@@ -15,6 +15,12 @@ Grid::Grid(int width, int height, int block_size) {
     }
     grid_blocks.push_back(row);
   }
+  g_num_lines_cleared = 0;
+  g_level = 0;
+  g_score = 0;
+}
+int Grid::getLevel() {
+  return g_level;
 }
 
 void Grid::UpdateGrid(Piece piece) {
@@ -43,6 +49,7 @@ bool Grid::isOccupied(int x, int y, int block_size) {
 }
 
 void Grid::CheckRows() {
+  int curr_lines_cleared = 0;
   for (int i = 0; i <= g_y_num; i++){
     bool isFull = true;
     for (int k = 0; k < g_x_num; k++) {
@@ -66,6 +73,18 @@ void Grid::CheckRows() {
       for (int j = 0; j < g_x_num; j++) {
         grid_blocks[0][j].filled = false;
       }
+      curr_lines_cleared++;
+
     }
   }
+
+  //update level and score
+  vector<double> multipliers = {1, 2.5, 7.5, 30};
+  if (curr_lines_cleared) {
+    g_score += 40*(g_level+1)*multipliers[curr_lines_cleared - 1];
+    cout << "score: " << g_score << " level: " << g_level << endl;
+  }
+  g_num_lines_cleared+=curr_lines_cleared;
+  g_level = g_num_lines_cleared/10;
+
 }
