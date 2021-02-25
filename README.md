@@ -8,6 +8,7 @@ Compile the program using make:
 $ make
 
 Run the game like this:
+
 $ ./tetris
 
 Enjoy!
