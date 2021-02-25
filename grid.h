@@ -33,5 +33,6 @@ public: //method declarations
   bool isOccupied(int x, int y, int block_size);
   void CheckRows();
   int getLevel();
+  int getScore();
 };
 #endif

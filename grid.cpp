@@ -23,6 +23,10 @@ int Grid::getLevel() {
   return g_level;
 }
 
+int Grid::getScore() {
+  return g_score;
+}
+
 void Grid::UpdateGrid(Piece piece) {
   vector<SDL_Rect> blocks = piece.Get_Blocks();
   for (int i = 0; i < 4; i++) {
@@ -33,7 +37,7 @@ void Grid::UpdateGrid(Piece piece) {
     if (y >= g_y_num || x >= g_x_num) {
       cout << "wrong! x is " << x << " and y is " << y << endl;
     }
-    
+
     grid_blocks[y][x] = b;
   }
 }
