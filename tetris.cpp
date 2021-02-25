@@ -1,8 +1,25 @@
 #include "grid.h"
 #include <cstdio>
 #include <ctime>
+#include <list>
 
 using namespace std;
+
+void drawMessage(char* str, int num, int x, int y, int w, int h, SDL_Renderer *rend, TTF_Font* font, SDL_Color color) {
+  char st1[256];
+  if (num != -1)
+    sprintf(st1, "%s %d", str, num);
+  else
+    sprintf(st1, "%s", str);
+  SDL_Surface* s1 = TTF_RenderText_Solid(font, st1, color);
+  SDL_Texture* m = SDL_CreateTextureFromSurface(rend, s1);
+  SDL_Rect mr;
+  mr.x = x;
+  mr.y = y;
+  mr.w = w;
+  mr.h = h;
+  SDL_RenderCopy(rend, m, NULL, &mr);
+}
 
 /* Functions */
 void drawShape(SDL_Renderer* rend, SDL_Rect rect, int p_shape) {
@@ -140,7 +157,10 @@ int main() {
   Piece piece1(block_size, win_w, win_h);
   drawPiece(rend, piece1);
   SDL_RenderPresent(rend);
-  //drawShape(rend, rect);
+
+  //keep track of high scores
+  int comrade_number = 1;
+  list<vector<int>> high_scores_list;
 
   // Animation loop
   clock_t start = clock();
@@ -173,7 +193,7 @@ int main() {
           switch (event.key.keysym.scancode) {
             case SDL_SCANCODE_W:
             case SDL_SCANCODE_UP:
-              gameOver = piece1.Move(0, 0, 1, &grid, rend);  
+              gameOver = piece1.Move(0, 0, 1, &grid, rend);
               break;
             case SDL_SCANCODE_A:
             case SDL_SCANCODE_LEFT:
@@ -208,30 +228,72 @@ int main() {
       if (sassNum > 3) {
         sassNum = 0;
       }
+      //update high scores
+      int s = grid.getScore();
+      bool added = false;
+      vector<int> one_score = {comrade_number, s};
+      if (high_scores_list.empty()) {
+        high_scores_list.push_front(one_score);
+      }
+      else {
+        for (list<vector<int> >::iterator i=high_scores_list.begin(); i!=high_scores_list.end(); i++) {
+          if (s > (*i)[1]) {
+            high_scores_list.insert(i, one_score);
+            added = true;
+            if (high_scores_list.size() > 5) {
+              high_scores_list.pop_back();
+            }
+            break;
+          }
+        }
+        if (!added && high_scores_list.size() < 5) {
+          high_scores_list.push_back(one_score);
+        }
+      }
+      for (list<vector<int> >::iterator i=high_scores_list.begin(); i!=high_scores_list.end(); i++) {
+        cout << "comrade " << (*i)[0] << " score: " << (*i)[1] << endl;
+      }
+
+      comrade_number++;
     }
 
     while (gameOver) {
       SDL_RenderClear(rend);
-        
+
+      SDL_Color red = {163, 13, 6};
+      SDL_Color gold = {225, 181, 45};
+      char s_1[256] = "Top scores";
+      drawMessage(s_1, -1, 200, 350, 300, 50, rend, font, red);
+      int k = 0;
+      for (list<vector<int> >::iterator i=high_scores_list.begin(); i!=high_scores_list.end(); i++) {
+        cout << "comrade " << (*i)[0] << " score: " << (*i)[1] << endl;
+        char s_2[256]  = "comrade ";
+        int loc = 400 +55*k;
+        drawMessage(s_2, (*i)[0], 200, loc, 150, 50, rend, font, gold);
+        char s_3[256] = " ";
+        drawMessage(s_3, (*i)[1], 400, loc, 50, 50, rend, font, gold);
+        k++;
+      }
+
       // Boundaries of message
       SDL_Rect messageRect;
       messageRect.x = 165;
-      messageRect.y = 100;
+      messageRect.y = 25;
       messageRect.w = 400;
       messageRect.h = 200;
       SDL_Rect sassRect;
       sassRect.x = 160;
-      sassRect.y = 300;
+      sassRect.y = 200;
       sassRect.w = 400;
       sassRect.h = 60;
       SDL_Rect smRect;
       smRect.x = 200;
-      smRect.y = 475;
+      smRect.y = 270;
       smRect.w = 300;
       smRect.h = 65;
-      
+
       SDL_RenderCopy(rend, message, NULL, &messageRect);
-    
+
       switch (sassNum) {
         case 0:
           SDL_RenderCopy(rend, sass0, NULL, &sassRect);
@@ -248,10 +310,10 @@ int main() {
         default:
           break;
       }
-      
+
       SDL_RenderCopy(rend, smMessage, NULL, &smRect);
       SDL_RenderPresent(rend);
-      
+
       while (SDL_PollEvent(&event) && gameOver) {
         switch(event.key.keysym.scancode) {
           case SDL_SCANCODE_Y:
@@ -269,7 +331,7 @@ int main() {
             break;
         }
       }
-      SDL_Delay(1000 / 60);  
+      SDL_Delay(1000 / 60);
     }
     if (reset || close) {
       reset = false;
@@ -277,36 +339,21 @@ int main() {
     }
 
     // display score
-    int score = grid.getScore();
-    char str[256];
-    sprintf(str, "Score: %d", score);
-    SDL_Surface* s1 = TTF_RenderText_Solid(font, str, white);
-    SDL_Texture* m = SDL_CreateTextureFromSurface(rend, s1);
-    SDL_Rect mr;
-    mr.x = 525;
-    mr.y = 100;
-    mr.w = 100;
-    mr.h = 75;
-    SDL_RenderCopy(rend, m, NULL, &mr);
-
+    SDL_Color white = {255, 255, 255};
+    char str1[256] = "Score: ";
+    drawMessage(str1, grid.getScore(), 525, 100, 100, 75, rend, font, white);
     // display level
-    int lvl = grid.getLevel();
-    sprintf(str, "Level: %d", lvl);
-    s1 = TTF_RenderText_Solid(font, str, white);
-    m = SDL_CreateTextureFromSurface(rend, s1);
-    mr.x = 525;
-    mr.y = 170;
-    mr.w = 100;
-    mr.h = 75;
-    SDL_RenderCopy(rend, m, NULL, &mr);
-    
+    char str2[256] = "Level: ";
+    drawMessage(str2, grid.getLevel(), 525, 170, 100, 75, rend,font, white);
+
+
     drawGrid(rend, grid);
     drawPiece(rend, piece1);
     SDL_RenderPresent(rend);
     // Calculate to 60 fps
-    SDL_Delay(1000 / 60);   
+    SDL_Delay(1000 / 60);
   }
- 
+
   // // free surface and texture later?
 
   // Clean up font stuff
