@@ -147,6 +147,14 @@ int main() {
 
   int sassNum = -1; // Controls which message is displayed
 
+  //load logo image
+  SDL_Surface* logo = SDL_LoadBMP("logo3.bmp");
+  SDL_Texture* logoTexture = SDL_CreateTextureFromSurface(rend, logo);
+
+  //load st. petersburgn image
+  SDL_Surface* scene = SDL_LoadBMP("petersburg.bmp");
+  SDL_Texture* sceneTexture = SDL_CreateTextureFromSurface(rend, scene);
+
   // Create grid
   Grid grid(win_w, win_h, block_size);
 
@@ -164,7 +172,7 @@ int main() {
 
   // Animation loop
   clock_t start = clock();
-  int base_speed = 50000;
+  int base_speed = 80000;
   int speed = base_speed;
   bool gameOver = false;
 
@@ -338,9 +346,8 @@ int main() {
       continue;
     }
 
-    
-    SDL_Surface* logo = SDL_LoadBMP("logo3.bmp");
-    SDL_Texture* logoTexture = SDL_CreateTextureFromSurface(rend, logo);
+
+
     SDL_Rect logoRect;
     logoRect.x = 500;
     logoRect.y = 75;
@@ -355,8 +362,8 @@ int main() {
     char str2[256] = "Level: ";
     drawMessage(str2, grid.getLevel(), 525, 270, 100, 75, rend,font, white);
 
-    SDL_Surface* scene = SDL_LoadBMP("petersburg.bmp");
-    SDL_Texture* sceneTexture = SDL_CreateTextureFromSurface(rend, scene);
+    //SDL_Surface* scene = SDL_LoadBMP("petersburg.bmp");
+    //SDL_Texture* sceneTexture = SDL_CreateTextureFromSurface(rend, scene);
     SDL_Rect sceneRect;
     sceneRect.x = 500;
     sceneRect.y = 400;
@@ -377,6 +384,8 @@ int main() {
   // Clean up font stuff
   SDL_DestroyTexture(message);
   SDL_FreeSurface(surf);
+  SDL_FreeSurface(logo);
+  SDL_DestroyTexture(logoTexture);
   TTF_CloseFont(font);
   TTF_Quit();
 
